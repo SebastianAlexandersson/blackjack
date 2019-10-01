@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="sv">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: Arial;
+      }
+
+      #table {
+        width: 100vw;
+        height: 100vh;
+        background-color: lightgreen;
+      }
+
+      #table::before {
+        content: "DEALER";
+        color: #fff;
+        font-weight: bold;
+        position: absolute;
+        font-size: 3em;
+        left: 50%;
+        top: 20%;
+        transform: translateX(-50%);
+      }
+
+      #table::after {
+        content: "PLAYER";
+        color: #fff;
+        font-weight: bold;
+        position: absolute;
+        font-size: 3em;
+        left: 50%;
+        top: 60%;
+        transform: translateX(-50%);
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      #deal {
+        padding: 1em 2em;
+        font-weight: bold;
+        position: absolute;
+        top: 40%;
+        left: 50%;
+        transform: translateX(-50%);
+        color: #fff;
+        border: 2px solid #fff;
+        background-color: rgb(91, 197, 91);
+        font-size: 1em;
+      }
+
+      #deal:hover {
+        background-color: green;
+      }
+
+      #dealerhand {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        top: 26%;
+      }
+
+      #playerhand {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        top: 49%;
+      }
+
+      .card-container {
+        display: flex;
+        flex-direction: row;
+      }
+
+      .card {
+        width: 4rem;
+        height: 6rem;
+        background-color: #fff;
+        margin: .2em;
+        font-size: .8em;
+        position: relative;
+      }
+
+      .card span:first-child {
+        position: absolute;
+        left: 2px;
+      }
+
+      .card span:nth-child(2) {
+        position: absolute;
+        top:50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 1.5rem;
+      }
+
+      .card span:last-child {
+        position: absolute;
+        bottom: 0;
+        right: 2px;
+      }
+
+      #playerscore,
+      #dealerscore {
+        font-size: 3em;
+        color: #fff;
+        font-weight: bold;
+        position: absolute;
+        left: 70%;
+      }
+
+      #playerscore {
+        top: 60%;
+      }
+
+      #dealerscore {
+        top: 20%;
+      }
+
+      #playerwinner,
+      #dealerwinner {
+        font-size: 2em;
+        color: #fff;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%)
+      }
+
+      #playerwinner {
+        top: 65%;
+      }
+
+      #dealerwinner {
+        top: 17%;
+      }
+
+      .hitnstay {
+        position: absolute;
+        top: 40%;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      .hitnstay button {
+        padding: 1em 2em;
+        color: #fff;
+        border: 2px solid #fff;
+        background-color: rgb(91, 197, 91);
+        font-size: 1em;
+        font-weight: bold;
+      }
+
+      .hitnstay button:hover {
+        background-color: green;
+      }
+
+      #facedown {
+        position: absolute;
+        left: 50%;
+        top: 26%;
+        background-color: green;
+      }
+
+    </style>
+    <title>Blackjack!</title>
+  </head>
+  <body>
+    <div id="app">
+      <div id="table">
+        <button
+          id="deal"
+          v-bind:class="{ hidden: handInProgress }"
+          @click="dealOnClick()"
+        >
+          DEAL
+        </button>
+        <span id="dealerscore" v-if="!playersTurn">{{ getScore(this.dealerHand, false) }}</span>
+        <div id="dealerhand" class="card-container">
+          <div v-for="card in dealerHand" class="card">
+            <span>{{ card.value }}</span>
+            <span>{{ card.suit }}</span>
+            <span>{{ card.value }}</span>
+          </div>
+        </div>
+        <span id="playerscore">{{ getScore(this.playerHand, true) }}</span>
+        <div id="playerhand" class="card-container">
+          <div v-for="card in playerHand" class="card">
+            <span>{{ card.value }}</span>
+            <span>{{ card.suit }}</span>
+            <span>{{ card.value }}</span>
+          </div>
+        </div>
+        <div v-if="handInProgress && playersTurn" class="hitnstay">
+          <button id="hit" @click="hitOnClick">HIT ME!</button>
+          <button id="stay" @click="stay(true)">STAY</button>
+        </div>
+        <span id="dealerwinner" v-if="dealerWin">WINNER</span>
+        <span id="playerwinner" v-if="playerWin">WINNER</span>
+        <div class="card" id="facedown" v-if="playersTurn && handInProgress"></div>
+      </div>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="index.js"></script>
+  </body>
+</html>
