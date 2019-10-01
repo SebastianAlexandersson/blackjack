@@ -129,7 +129,9 @@
       }
 
       #playerwinner,
-      #dealerwinner {
+      #dealerwinner,
+      #playerbust,
+      #dealerbust {
         font-size: 2em;
         color: #fff;
         position: absolute;
@@ -137,11 +139,13 @@
         transform: translateX(-50%)
       }
 
-      #playerwinner {
+      #playerwinner,
+      #playerbust {
         top: 65%;
       }
 
-      #dealerwinner {
+      #dealerwinner,
+      #dealerbust {
         top: 17%;
       }
 
@@ -185,6 +189,7 @@
         >
           DEAL
         </button>
+        <span id="dealerbust" v-if="dealerBust">BUST</span>
         <span id="dealerscore" v-if="!playersTurn">{{ getScore(this.dealerHand, false) }}</span>
         <div id="dealerhand" class="card-container">
           <div v-for="card in dealerHand" class="card">
@@ -193,7 +198,8 @@
             <span>{{ card.value }}</span>
           </div>
         </div>
-        <span id="playerscore">{{ getScore(this.playerHand, true) }}</span>
+        <span id="playerbust" v-if="playerBust">BUST</span>
+        <span id="playerscore" v-if="showPlayerScore">{{ getScore(this.playerHand, true) }}</span>
         <div id="playerhand" class="card-container">
           <div v-for="card in playerHand" class="card">
             <span>{{ card.value }}</span>

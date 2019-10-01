@@ -4,13 +4,15 @@ new Vue({
     deck: [],
     dealerHand: [],
     playerHand: [],
-    credits: 100,
     handInProgress: false,
     dealerHasAce: false,
     playerHasAce: false,
     playersTurn: true,
     playerWin: false,
     dealerWin: false,
+    playerBust:false,
+    dealerBust: false,
+    showPlayerScore: false,
     values: {
       "A": 1,
       2: 2,
@@ -89,8 +91,6 @@ new Vue({
       this.deck = this.createDeck()
       this.shuffle(this.deck)
       this.shuffle(this.deck)
-      this.dealerHand = []
-      this.playerHand = []
       this.dealerHand.push(this.deck.pop())
       this.dealerHand.push(this.deck.pop())
       this.playerHand.push(this.deck.pop())
@@ -98,22 +98,29 @@ new Vue({
 
       if(this.getScore(this.playerHand, true) === 21) {
         this.playerWin = true
+        this.dealerWin = false
         this.handInProgress = false
         
       } else if(this.getScore(this.dealerHand, false) === 21) {
         this.dealerWin = true
+        this.playerWin = false
         this.handInProgress = false
       }
       console.log(this.deck)
     },
 
     dealOnClick() {
+      this.dealerHand = []
+      this.playerHand = []
       this.dealerWin = false
       this.playerWin = false
       this.playerHasAce = false
       this.dealerHasAce = false
       this.handInProgress = true
       this.playersTurn = true
+      this.showPlayerScore = true
+      this.playerBust = false
+      this.dealerBust = false
       this.newHand()
     },
 
@@ -142,9 +149,11 @@ new Vue({
       const score = this.getScore(hand, true)
       if(isPlayer && score > 21) {
         this.dealerWin = true
+        this.playerWin = false
+        this.playerBust = true
         this.handInProgress = false
       } else if(isPlayer && score === 21) {
-        this.calcWinner()
+        this.stay(true)
       }
       console.log(this.deck)
     },
@@ -169,6 +178,7 @@ new Vue({
         return
       } else if(score > 21) {
         this.playerWin = true
+        this.dealerBust = true
         this.handInProgress = false
         return
       } else if(score >= 17 && score < 21) {
@@ -187,8 +197,11 @@ new Vue({
 
       if(player > dealer) {
         this.playerWin = true
+        this.dealerWin = false
+        return
       }
       this.dealerWin = true
+      this.playerWin = false
     }
 
   }
